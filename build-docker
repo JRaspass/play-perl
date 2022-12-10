@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+
+use v5.36;
+
+use autodie      qw(system);
+use experimental qw(for_list);
+
+for my ( $type, $ver ) ( stable => '5.36.0', dev => '5.37.6' ) {
+    system qw(docker buildx build .),
+        '--build-arg' => "ver=$ver",
+        '--file'      => 'perl.dockerfile',
+        '--tag'       => "play-perl:$type";
+}
+
+system qw(./build-assets);
+
+system qw(docker buildx build .),
+    '--file' => 'play.dockerfile',
+    '--tag'  => 'play-perl';

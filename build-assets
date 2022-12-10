@@ -1,0 +1,24 @@
+#!/usr/bin/env perl
+
+use v5.36;
+use autodie       qw(system);
+use File::Slurper qw(read_dir read_text write_text);
+
+system qw(rm -rf assets);
+
+system qw(node_modules/.bin/esbuild
+    --bundle
+    --entry-names=[name]-[hash]
+    --format=esm
+    --loader:.svg=copy
+    --minify
+    --outdir=assets
+    --target=es2020
+), <static/*.{css,js,svg}>;
+
+my $html = read_text 'static/play.html';
+
+my %assets = map { s/-\w+//r => $_ } read_dir 'assets';
+$html =~ s/\Q$_/$assets{$_}/ for keys %assets;
+
+write_text 'assets/play.html', $html;

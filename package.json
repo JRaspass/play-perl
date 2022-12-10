@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@codemirror/legacy-modes": "^6",
+    "codemirror": "^6"
+  },
+  "devDependencies": {
+    "esbuild": ""
+  }
+}
